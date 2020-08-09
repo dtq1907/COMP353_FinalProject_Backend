@@ -23,19 +23,33 @@ Job.create = (newJob, result) => {
   });
 };
 
+Job.getAll = (title, result) => {
 
-
-Job.getAll = result => {
-  sql.query("SELECT * FROM job", (err, res) => {
-    if (err) {
-      console.log("error: ", err);
-      result(null, err);
-      return;
-    }
-
-    console.log("job: ", res);
-    result(null, res);
-  });
+  if (title != null) {
+    sql.query("SELECT * FROM job WHERE title = ?", title, (err, res) => {
+      if (err) {
+        console.log("error: ", err);
+        result(null, err);
+        return;
+      }
+  
+      console.log("job: ", res);
+      result(null, res);
+    });
+  }
+  else {
+    sql.query("SELECT * FROM job", (err, res) => {
+      if (err) {
+        console.log("error: ", err);
+        result(null, err);
+        return;
+      }
+  
+      console.log("job: ", res);
+      result(null, res);
+    });
+  }
+  
 };
 
 Job.findById = (jobID, result) => {

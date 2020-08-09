@@ -32,7 +32,7 @@ exports.create = (req, res) => {
 
 // Retrieve all jobs from the database.
 exports.findAll = (req, res) => {
-    Job.getAll((err, data) => {
+    Job.getAll(req.query.title, (err, data) => {
       if (err)
         res.status(500).send({
           message:
@@ -40,7 +40,7 @@ exports.findAll = (req, res) => {
         });
       else res.send(data);
     });
-  };
+};
 
 // Find a single job with a jobID
 exports.findOne = (req, res) => {
