@@ -2,13 +2,19 @@ const sql = require("./db.js");
 
 // constructor
 const User = function(user) {
+  this.userType = user.userType;
   this.email = user.email;
-  this.name = user.name;
-  this.active = user.active;
+  this.membership = user.membership;
+  this.password = user.password;
+  this.accountBalance = user.accountBalance;
+  this.firstName = user.firstName;
+  this.lastName = user.lastName;
+  this.accountStatus = user.accountStatus;
+  this.isFrozen = user.isFrozen;
 };
 
 User.create = (newUser, result) => {
-  sql.query("INSERT INTO users SET ?", newUser, (err, res) => {
+  sql.query("INSERT INTO user SET ?", newUser, (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(err, null);
@@ -20,8 +26,21 @@ User.create = (newUser, result) => {
   });
 };
 
-User.findById = (userId, result) => {
-  sql.query(`SELECT * FROM users WHERE id = ${userId}`, (err, res) => {
+User.getAll = result => {
+  sql.query("SELECT * FROM user", (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(null, err);
+      return;
+    }
+
+    console.log("users: ", res);
+    result(null, res);
+  });
+};
+
+User.findById = (userID, result) => {
+  sql.query(`SELECT * FROM user WHERE userID = ${userID}`, (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(err, null);
@@ -34,28 +53,15 @@ User.findById = (userId, result) => {
       return;
     }
 
-    // not found User with the id
+    // not found user with the userID
     result({ kind: "not_found" }, null);
   });
 };
 
-User.getAll = result => {
-  sql.query("SELECT * FROM users", (err, res) => {
-    if (err) {
-      console.log("error: ", err);
-      result(null, err);
-      return;
-    }
-
-    console.log("users: ", res);
-    result(null, res);
-  });
-};
-
-User.updateById = (id, user, result) => {
+User.updateById = (userID, user, result) => {
   sql.query(
-    "UPDATE users SET email = ?, name = ?, active = ? WHERE id = ?",
-    [user.email, user.name, user.active, id],
+    "UPDATE user SET userType = ?, email = ?, membership = ?, password = ?, accountBalance = ?, firstName = ?, lastName = ?, accountStatus = ?, isFrozen = ? WHERE userID = ?",
+    [user.userType, user.email, user.membership, user.password, user.accountBalance, user.firstName, user.lastName, user.accountStatus, user.isFrozen, userID],
     (err, res) => {
       if (err) {
         console.log("error: ", err);
@@ -64,19 +70,19 @@ User.updateById = (id, user, result) => {
       }
 
       if (res.affectedRows == 0) {
-        // not found User with the id
+        // not found user with the userID
         result({ kind: "not_found" }, null);
         return;
       }
 
-      console.log("updated user: ", { id: id, ...user });
-      result(null, { id: id, ...user });
+      console.log("updated user: ", { userID: userID, ...user });
+      result(null, { userID: userID, ...user });
     }
   );
 };
 
-User.remove = (id, result) => {
-  sql.query("DELETE FROM users WHERE id = ?", id, (err, res) => {
+User.remove = (userID, result) => {
+  sql.query("DELETE FROM user WHERE userID = ?", userID, (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(null, err);
@@ -84,18 +90,18 @@ User.remove = (id, result) => {
     }
 
     if (res.affectedRows == 0) {
-      // not found User with the id
+      // not found user with the id
       result({ kind: "not_found" }, null);
       return;
     }
 
-    console.log("deleted user with id: ", id);
+    console.log("deleted user with userID: ", userID);
     result(null, res);
   });
 };
 
 User.removeAll = result => {
-  sql.query("DELETE FROM users", (err, res) => {
+  sql.query("DELETE FROM user", (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(null, err);

@@ -1,6 +1,6 @@
 const User = require("../models/user.model.js");
 
-// Create and Save a new User
+// Create and Save a new user
 exports.create = (req, res) => {
     // Validate request
     if (!req.body) {
@@ -9,25 +9,31 @@ exports.create = (req, res) => {
       });
     }
   
-    // Create a User
+    // Create a user
     const user = new User({
+      userType: req.body.userType,
       email: req.body.email,
-      name: req.body.name,
-      active: req.body.active
+      membership: req.body.membership,
+      password: req.body.password,
+      accountBalance: req.body.accountBalance,
+      firstName: req.body.firstName,
+      lastName: req.body.lastName,
+      accountStatus: req.body.accountStatus,
+      isFrozen: req.body.isFrozen
     });
   
-    // Save User in the database
+    // Save user in the database
     User.create(user, (err, data) => {
       if (err)
         res.status(500).send({
           message:
-            err.message || "Some error occurred while creating the User."
+            err.message || "Some error occurred while creating the user."
         });
       else res.send(data);
     });
   };
 
-// Retrieve all Users from the database.
+// Retrieve all users from the database.
 exports.findAll = (req, res) => {
     User.getAll((err, data) => {
       if (err)
@@ -39,24 +45,24 @@ exports.findAll = (req, res) => {
     });
   };
 
-// Find a single User with a userId
+// Find a single user with a userID
 exports.findOne = (req, res) => {
-    User.findById(req.params.userId, (err, data) => {
+    User.findById(req.params.userID, (err, data) => {
       if (err) {
         if (err.kind === "not_found") {
           res.status(404).send({
-            message: `Not found User with id ${req.params.userId}.`
+            message: `Not found user with userID ${req.params.userID}.`
           });
         } else {
           res.status(500).send({
-            message: "Error retrieving User with id " + req.params.userId
+            message: "Error retrieving user with userID " + req.params.userID
           });
         }
       } else res.send(data);
     });
   };
 
-// Update a User identified by the userId in the request
+// Update a user identified by the userID in the request
 exports.update = (req, res) => {
     // Validate Request
     if (!req.body) {
@@ -66,17 +72,17 @@ exports.update = (req, res) => {
     }
   
     User.updateById(
-      req.params.userId,
+      req.params.userID,
       new User(req.body),
       (err, data) => {
         if (err) {
           if (err.kind === "not_found") {
             res.status(404).send({
-              message: `Not found User with id ${req.params.userId}.`
+              message: `Not found user with userID ${req.params.userID}.`
             });
           } else {
             res.status(500).send({
-              message: "Error updating User with id " + req.params.userId
+              message: "Error updating user with userID " + req.params.userID
             });
           }
         } else res.send(data);
@@ -84,24 +90,24 @@ exports.update = (req, res) => {
     );
   };
 
-// Delete a User with the specified userId in the request
+// Delete a user with the specified userID in the request
 exports.delete = (req, res) => {
-    User.remove(req.params.userId, (err, data) => {
+    User.remove(req.params.userID, (err, data) => {
       if (err) {
         if (err.kind === "not_found") {
           res.status(404).send({
-            message: `Not found User with id ${req.params.userId}.`
+            message: `Not found user with userID ${req.params.userID}.`
           });
         } else {
           res.status(500).send({
-            message: "Could not delete User with id " + req.params.userId
+            message: "Could not delete user with userID " + req.params.userID
           });
         }
-      } else res.send({ message: `User was deleted successfully!` });
+      } else res.send({ message: `user was deleted successfully!` });
     });
   };
 
-// Delete all Users from the database.
+// Delete all users from the database.
 exports.deleteAll = (req, res) => {
     User.removeAll((err, data) => {
       if (err)
@@ -109,6 +115,6 @@ exports.deleteAll = (req, res) => {
           message:
             err.message || "Some error occurred while removing all users."
         });
-      else res.send({ message: `All Users were deleted successfully!` });
+      else res.send({ message: `All users were deleted successfully!` });
     });
   };

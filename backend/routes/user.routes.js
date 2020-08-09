@@ -1,21 +1,35 @@
-module.exports = app => {
-    const users = require("../controllers/user.controller.js");
-  
-    // Create a new User
-    app.post("/users", users.create);
-  
-    // Retrieve all Users
-    app.get("/users", users.findAll);
-  
-    // Retrieve a single User with userId
-    app.get("/users/:userId", users.findOne);
-  
-    // Update a User with userId
-    app.put("/users/:userId", users.update);
-  
-    // Delete a User with userId
-    app.delete("/users/:userId", users.delete);
-  
-    // Create a new User
-    app.delete("/users", users.deleteAll);
-  };
+var express = require('express');
+var router = express.Router();
+const user = require("../controllers/user.controller.js");
+
+// Create a new user
+router.post("/", function(req, res, next) {
+  user.create(req,res);
+});
+
+// Retrieve all users
+router.get("/", function(req, res, next) {
+  user.findAll(req,res);
+});
+
+// Retrieve a single user with userID
+router.get("/:userID", function(req, res, next) {
+  user.findOne(req,res);
+});
+
+// Update a user with userID
+router.put("/:userID", function(req, res, next) {
+  user.update(req,res);
+});
+
+// Delete a user with userID
+router.delete("/:userID", function(req, res, next) {
+  user.delete(req,res);
+});
+
+// Delete all users
+router.delete("/", function(req, res, next) {
+  user.deleteAll(req,res);
+});
+
+module.exports = router;
