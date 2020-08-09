@@ -124,6 +124,8 @@ Job.removeAll = result => {
     console.log(`deleted ${res.affectedRows} jobs`);
     result(null, res);
   });
+
+  sql.query("ALTER TABLE job AUTO_INCREMENT = 1");
 };
 
 module.exports = Job;

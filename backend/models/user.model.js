@@ -111,6 +111,8 @@ User.removeAll = result => {
     console.log(`deleted ${res.affectedRows} users`);
     result(null, res);
   });
+
+  sql.query("ALTER TABLE user AUTO_INCREMENT = 1");
 };
 
 module.exports = User;
