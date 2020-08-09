@@ -20,7 +20,7 @@ exports.create = (req, res) => {
     });
   
     // Save job in the database
-    Job.create(job, (err, data) => {
+    Job.create(job, req.params.userID, (err, data) => {
       if (err)
         res.status(500).send({
           message:
