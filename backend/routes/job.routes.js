@@ -3,7 +3,7 @@ var router = express.Router();
 const job = require("../controllers/job.controller.js");
 
 // Create a new job
-router.post("/", function(req, res, next) {
+router.post("/:userID", function(req, res, next) {
   job.create(req,res);
 });
 
@@ -31,6 +31,5 @@ router.delete("/:jobID", function(req, res, next) {
 router.delete("/", function(req, res, next) {
   job.deleteAll(req,res);
 });
-
 
 module.exports = router;

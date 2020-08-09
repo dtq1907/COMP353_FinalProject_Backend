@@ -1,4 +1,5 @@
 const sql = require("./db.js");
+const Posts = require("../models/posts.model.js");
 
 // constructor
 const Job = function(job) {
@@ -10,8 +11,20 @@ const Job = function(job) {
   this.datePosted = job.datePosted;
 };
 
-Job.create = (newJob, result) => {
+Job.create = (newJob, userID, result) => {
   sql.query("INSERT INTO job SET ?", newJob, (err, res) => {
+
+    // Create a new posted job
+    const posts = new Posts({
+      isPosted: 0,
+      userID: userID,
+      jobID: res.insertId
+    });
+
+    // Save posted job in the database
+    Posts.create(posts, (err, data) => {
+    });
+
     if (err) {
       console.log("error: ", err);
       result(err, null);
@@ -95,8 +108,11 @@ Job.updateById = (jobID, job, result) => {
 };
 
 Job.remove = (jobID, result) => {
-  sql.query("DELETE FROM job WHERE jobID = ?", jobID, (err, res) => {
-    if (err) {
+
+  sql.query("DELETE FROM posts WHERE jobID = " + Number(jobID));
+
+  sql.query("DELETE FROM job WHERE jobID = ?", Number(jobID), (err, res) => {
+      if (err) {
       console.log("error: ", err);
       result(null, err);
       return;
