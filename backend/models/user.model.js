@@ -58,6 +58,25 @@ User.findById = (userID, result) => {
   });
 };
 
+User.findByIdAuth = (email, password, result) => {
+  sql.query("SELECT * FROM user WHERE email = ? AND password = ?", [email, password], (err, res) => {
+    if (err) {
+      console.log("error: ", err);
+      result(err, null);
+      return;
+    }
+
+    if (res.length) {
+      console.log("found user!");
+      result(null, res);
+      return;
+    }
+
+    // not found user with specified email and password
+    result({ kind: "not_found" }, null);
+  });
+};
+
 User.updateById = (userID, user, result) => {
   sql.query(
     "UPDATE user SET userType = ?, email = ?, membership = ?, password = ?, accountBalance = ?, firstName = ?, lastName = ?, accountStatus = ?, isFrozen = ? WHERE userID = ?",

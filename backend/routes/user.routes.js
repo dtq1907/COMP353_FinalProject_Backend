@@ -17,6 +17,11 @@ router.get("/:userID", function(req, res, next) {
   user.findOne(req,res);
 });
 
+// Retrieve a single user with email and password
+router.get("/auth/:email/:password", function(req, res, next) {
+  user.findOneAuth(req,res);
+});
+
 // Update a user with userID
 router.put("/:userID", function(req, res, next) {
   user.update(req,res);
