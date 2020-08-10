@@ -82,6 +82,9 @@ User.updateById = (userID, user, result) => {
 };
 
 User.remove = (userID, result) => {
+
+  sql.query("DELETE FROM posts WHERE userID = " + Number(userID));  
+
   sql.query("DELETE FROM user WHERE userID = ?", userID, (err, res) => {
     if (err) {
       console.log("error: ", err);
@@ -101,6 +104,11 @@ User.remove = (userID, result) => {
 };
 
 User.removeAll = result => {
+
+  sql.query("DELETE FROM posts");
+
+  sql.query("DELETE FROM job");
+
   sql.query("DELETE FROM user", (err, res) => {
     if (err) {
       console.log("error: ", err);
@@ -113,6 +121,8 @@ User.removeAll = result => {
   });
 
   sql.query("ALTER TABLE user AUTO_INCREMENT = 1");
+  sql.query("ALTER TABLE job AUTO_INCREMENT = 1");
+  sql.query("ALTER TABLE posts AUTO_INCREMENT = 1");
 };
 
 module.exports = User;
