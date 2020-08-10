@@ -130,6 +130,9 @@ Job.remove = (jobID, result) => {
 };
 
 Job.removeAll = result => {
+
+  sql.query("DELETE FROM posts");
+
   sql.query("DELETE FROM job", (err, res) => {
     if (err) {
       console.log("error: ", err);
